@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>I love Cidade Ademar</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+    
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+
+        #imagem-overlay {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 380px;
+            height: 350px;
+            background-color: rgb(162, 81, 255);
+            border: 1px solid #ccc;
+            padding: 10px;
+            display: none;
+            z-index: 9999;
+        }
+
+        #imagem-overlay img {
+            width: 100%;
+            height: 80%;
+            object-fit: cover;
+        }
+
+        #imagem-overlay .informacoes {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        h1 {
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+    </style>
+</head>
+<body>
+    <h1>Mapeamento Participativo - Cidade Ademar</h1>
+    <div class="descricao"> Bem-vindo à apresentação do nosso mapa da região, destacando pontos de quadras, praças, biblioteca e cursos para jovens ! Este mapa foi cuidadosamente elaborado para fornecer informações sobre locais onde você pode relaxar, estudar, treinar e se profissionalizar gratuitamente.
+        O mapa foi criado por uma equipe de futuros desenvolvedores, usando java script, css, html, openstreetmap e leaflet no curso de desenvolvimento de sistemas da Despertar. A equipe é especialista em: 
+        -Lógica de programação;
+        -Entrada, processamento e saída;
+        -Javascript;
+        -Editores de JavaScript;
+        -Saídas de dados alert e console.log;
+        -Variáveis e constantes;
+        -Entradas de dados com prompt;
+        -Tipos de dados e conversões;        
+    </div>
+    <div id="map"></div>
+    <div id="imagem-overlay">
+        <img id="imagem" src="" alt="Imagem">
+        <p id="p">  </p>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js">
+   
+    </script>
+    <script>
+        
+        var map = L.map('map').setView([-23.67624, -46.64091], 15);
+
+        // Criar o mapa usando um provedor de tile
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Criar os dois grupos de camadas para escolas e praças
+        var escolasLayer = L.layerGroup();
+        var pracasLayer = L.layerGroup();
+
+        // Adicionar o controle de camadas ao mapa
+        L.control.layers(null, { "Escolas": escolasLayer, "Praças": pracasLayer }).addTo(map);
+
+
+
+        // Lista de coordenadas, nomes e imagens dos marcadores
+        var coordenadas = [
+            { lat: -23.66694, lng: -46.65319, nome: 'Praça', imagem:'https://lh3.googleusercontent.com/p/AF1QipMYECBpRiVZ6_A_wIBz1VIGnD3ZKJ19MOZIgWKa=s1360-w1360-h1020', informacoes: "jp lindo", icone: 'https://imgur.com/Dzt5maw.png'},
+            { lat: -23.65053, lng: -46.67363, nome: 'Praça escondida', imagem:'https://imgur.com/a/Dx3PLDd', informacoes: "jp m"},
+            { lat: -23.65287, lng: -46.67822, nome: 'Praça Carlos Baptista de Magalhães', imagem:'https://lh3.googleusercontent.com/p/AF1QipOOxcwoog4a-KKXRLUxOOoo_KDZ70kW3P7sARwb=s1360-w1360-h1020', informacoes: "jp ee", icone: 'https://api.iconify.design/tabler/brand-linktree.svg?color=green'},
+            { lat: -23.66161, lng: -46.66278, nome: 'Praça Comunitária Ligia Maria Salgado Nóbrega', imagem: 'https://editorajuma.com.br/wp-content/uploads/Praca-Comunitaria-Ligia.jpg', informacoes: "jp lele", icone: 'https://api.iconify.design/tabler/brand-linktree.svg?color=green'},
+            { lat: -23.66716, lng: -46.67572, nome: 'Praça Zavuvus', imagem: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO2MFcSgq6vqEfetqw-OtU3lIWaAxCrkk6ivXobxoknnBBmAMappowCJYUtaiJSVN731c&usqp=CAU', informacoes: "oi", icone: 'https://api.iconify.design/tabler/brand-linktree.svg?color=green'},
+            { lat: -23.69502, lng: -46.6433,  nome: 'Parque Sete Campos', imagem: 'https://payload.cargocollective.com/1/3/112332/2266864/foto-03_590.jpg', informacoes: "tttt"},
+            // Adicione mais coordenadas conforme necessário
+        ];
+
+        var coordenadas = [
+            { lat: -23.67624, lng: -46.64091, nome: 'Quadra da Associação Despertar', imagem: 'https://i.imgur.com/XjlTvEP.jpg', informacoes: "quadra de futebol, basquete e volei. quadra disponivel das 10h as 19h todos so nos finais de semana", icone: 'https://api.iconify.design/iconoir/basketball-field.svg' }, 
+            { lat: -23.67485, lng: -46.64909, nome: 'Escola Estadual Professora Joanna Abrahão', imagem: 'https://i.imgur.com/13aj0Gj.jpg', informacoes: "é isso ai", icone: 'https://api.iconify.design/iconoir/basketball-field.svg'},  
+            { lat: -23.6668384, lng: -46.6404358, nome:'Escola Estadual Maria Augusta', imagem: 'https://i.imgur.com/13aj0Gj.jpg', informacoes: "quadra de futebol, aberta das 8h as 18:50 apenas finais de semana", icone: 'https://api.iconify.design/iconoir/basketball-field.svg'},
+            { lat: -23.66161, lng: -46.66278, nome: 'Praça Comunitária Ligia Maria Salgado Nóbrega', imagem: 'https://www.prefeitura.sp.gov.br/cidade/secretarias/regionais/upload/cidade_ademar/RC0_02_vista_aerea_geral.jpg', informacoes: "uuuuu", icone: 'https://api.iconify.design/tabler/brand-linktree.svg?color=green'},
+            { lat: -23.66802, lng: -46.63537, nome: 'CEU Caminho do Mar', imagem: 'https://www.prefeitura.sp.gov.br/cidade/secretarias/regionais/upload/jabaquara/imagens/2012_01_09_ferias_ceu_4.jpg', informacoes: "eiii", icone: 'https://api.iconify.design/iconoir/basketball-field.svg'},
+            { lat: -23.67479, lng: -46.63223, nome: 'EE Doutor João Ernesto Faggin', imagem: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSh7EPzKxmZ42aJkpSGrrau1lCy5tvuKaOUpk9jtWKxAZeXEoaZnPuCLTLlNGVrchUDxPQ&usqp=CAU', informacoes: "iiiiiii", icone: 'https://api.iconify.design/iconoir/basketball-field.svg'},
+            { lat: -23.68058, lng: -46.63618, nome: 'Escola Estadual Yolanda Bernardini Robert', imagem:'https://f.i.uol.com.br/fotografia/2022/03/30/16486815596244e257452ff_1648681559_3x2_rt.jpg', informacoes: "wndy lee", icone: 'https://api.iconify.design/iconoir/basketball-field.svg'},
+            { lat: -23.68097, lng: -46.63677, nome: 'Leonor Quadros', imagem: 'https://veja.abril.com.br/wp-content/uploads/2016/06/alx_ee_estupro_original.jpeg?quality=90&strip=info&w=1025&h=519&crop=1', informacoes: "rafa", icone: 'https://api.iconify.design/iconoir/basketball-field.svg'},
+            { lat: -23.68412, lng: -46.65077, nome: 'IDB - Castelinho Dom Bosco', imagem: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHlXsAYJLZbSxsotiM_ihcjmZWYIFF7RtSV522LLqfyBx2a0ACfBz7Rjg_7nF5g29cncY&usqp=CAU', informacoes: "gabriel", icone: 'https://api.iconify.design/material-symbols/menu-book-outline-rounded.svg?color=red'},
+            // Adicione mais coordenadas conforme necessário
+        ];
+
+        // Adicionar marcadores no mapa com nomes e imagens
+        coordenadas.forEach(function(coord) {
+            var icon = L.icon({
+                iconUrl: coord.icone,
+                iconSize: [30, 30],
+                popupAnchor: [0, -20]
+            });
+
+            var marker = L.marker([coord.lat, coord.lng], { icon: icon }).addTo(map);
+            marker.bindPopup(coord.nome);
+
+
+            // Defina as coordenadas dos vértices do polígono
+            var polygonCoords = [
+                [-23.664103, -46.646282],
+                [-23.658022, -46.661650],
+                [-23.673197, -46.661886],
+                [-23.675164, -46.654714]
+            ];
+
+            // Crie uma camada de polígono usando as coordenadas
+            var polygon = L.polygon(polygonCoords, { color: 'white', }).addTo(map);
+
+            // Evento de clique no marcador
+            marker.on('click', function() {
+                var imagemOverlay = document.getElementById('imagem-overlay');
+                var imagem = document.getElementById('imagem');
+                var informacoes = document.getElementById("p");
+                imagem.src = coord.imagem;
+                informacoes.textContent = coord.informacoes;
+                imagemOverlay.style.display = 'block';
+            });
+        });
+
+        map.on('click', function(event) {
+            var imagemOverlay = document.getElementById('imagem-overlay');
+            if (event.originalEvent.target.id !== 'imagem-overlay') {
+                imagemOverlay.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
